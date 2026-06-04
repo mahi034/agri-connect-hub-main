@@ -1,0 +1,139 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-mid: var(--primary-mid);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-amber-brand: var(--amber-brand);
+  --color-swaraj: var(--swaraj);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  --shadow-soft: 0 4px 20px -8px rgba(30, 107, 63, 0.18);
+  --shadow-elevated: 0 20px 60px -20px rgba(7, 28, 14, 0.35);
+}
+
+:root {
+  --radius: 0.875rem;
+
+  --background: oklch(0.985 0.008 130);
+  --foreground: oklch(0.22 0.03 130);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.03 130);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.03 130);
+
+  /* Cropmak greens */
+  --primary: oklch(0.44 0.12 150);          /* #1E6B3F dark green */
+  --primary-foreground: oklch(0.99 0.005 130);
+  --primary-mid: oklch(0.56 0.13 155);      /* #2E8B57 */
+  --primary-soft: oklch(0.95 0.03 145);     /* #E8F4ED */
+
+  --secondary: oklch(0.96 0.015 130);
+  --secondary-foreground: oklch(0.22 0.03 130);
+
+  --muted: oklch(0.96 0.015 130);
+  --muted-foreground: oklch(0.5 0.025 135);
+  --subtle: oklch(0.65 0.02 135);
+
+  --accent: oklch(0.95 0.03 145);
+  --accent-foreground: oklch(0.32 0.08 150);
+
+  --amber-brand: oklch(0.65 0.14 60);       /* #C97A0A */
+  --swaraj: oklch(0.55 0.21 28);            /* #C8102E */
+
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.9 0.02 140);
+  --border-strong: oklch(0.82 0.03 140);
+  --input: oklch(0.9 0.02 140);
+  --ring: oklch(0.44 0.12 150);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1240px;
+  padding-inline: 1.25rem;
+}
+
+@utility hero-bg {
+  background:
+    radial-gradient(ellipse 60% 70% at 80% 50%, rgba(46, 139, 87, 0.45), transparent 60%),
+    radial-gradient(ellipse 50% 60% at 20% 30%, rgba(110, 231, 160, 0.15), transparent 60%),
+    linear-gradient(135deg, #071C0E 0%, #0F3321 45%, #1A5C35 100%);
+}
+
+@utility hero-dots {
+  background-image: radial-gradient(rgba(167, 243, 196, 0.18) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@utility text-lime-gradient {
+  background: linear-gradient(180deg, #6EE7A0 0%, #A7F3C4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@utility animate-float {
+  animation: float-y 5s ease-in-out infinite;
+}
