@@ -1,22 +1,28 @@
 import { useState } from "react";
-import { Send, Phone, Mail, MapPin, Check } from "lucide-react";
+import { Send, Phone, Mail, MapPin, Check, Loader2 } from "lucide-react";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL, gmailComposeUrl } from "@/lib/contact";
+import { sendEnquiryEmail } from "@/lib/api/email.functions";
+import { toast } from "sonner";
 
 export function EnquirySection() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [form, setForm] = useState({ name: "", phone: "", interest: "Swaraj Tractors", message: "" });
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Open Gmail compose in a new tab with the enquiry pre-filled
-    const body = `Name: ${form.name}\nPhone: ${form.phone}\nInterest: ${form.interest}\n\n${form.message}`;
-    window.open(
-      gmailComposeUrl({ subject: `Cropmak Enquiry — ${form.interest}`, body }),
-      "_blank",
-      "noopener,noreferrer",
-    );
-    setStatus("sent");
-    setTimeout(() => setStatus("idle"), 3500);
+    setStatus("sending");
+
+    try {
+      await sendEnquiryEmail({ data: form });
+      setStatus("sent");
+      toast.success("Our team will contact you shortly", { duration: 3000 });
+      setForm({ name: "", phone: "", interest: "Swaraj Tractors", message: "" });
+      setTimeout(() => setStatus("idle"), 3500);
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      toast.error("Failed to send enquiry. Please try again.");
+      setStatus("idle");
+    }
   };
 
   return (
@@ -41,17 +47,18 @@ export function EnquirySection() {
         <div className="lg:col-span-3">
           <form onSubmit={onSubmit} className="bg-card rounded-2xl border border-border p-7 md:p-9 shadow-soft">
             <h3 className="font-display font-bold text-xl mb-1">Send us an enquiry</h3>
-            <p className="text-sm text-muted-foreground mb-6">Submitting opens Gmail with your message pre-filled.</p>
+            <p className="text-sm text-muted-foreground mb-6">We will get back to you as soon as possible.</p>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <Field label="Full Name *" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="Your name" />
-              <Field label="Phone *" required type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} placeholder="+91 ..." />
+              <Field label="Full Name *" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="Your name" disabled={status === "sending"} />
+              <Field label="Phone *" required type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} placeholder="+91 ..." disabled={status === "sending"} />
               <div className="md:col-span-2 flex flex-col gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Interest</label>
                 <select
                   value={form.interest}
                   onChange={(e) => setForm({ ...form, interest: e.target.value })}
-                  className="bg-background border border-border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
+                  disabled={status === "sending"}
+                  className="bg-background border border-border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:opacity-50"
                 >
                   <option>Swaraj Tractors</option>
                   <option>Implements</option>
@@ -67,16 +74,24 @@ export function EnquirySection() {
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 rows={4}
+                disabled={status === "sending"}
                 placeholder="Tell us about your farm and what you're looking for..."
-                className="bg-background border border-border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
+                className="bg-background border border-border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:opacity-50"
               />
             </div>
 
             <button
               type="submit"
-              className="mt-6 w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-mid text-primary-foreground px-7 py-3.5 rounded-full font-semibold text-sm transition-colors shadow-soft"
+              disabled={status === "sending" || status === "sent"}
+              className="mt-6 w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-mid text-primary-foreground px-7 py-3.5 rounded-full font-semibold text-sm transition-colors shadow-soft disabled:opacity-70"
             >
-              {status === "sent" ? (<><Check className="h-4 w-4" /> Gmail opened — hit send to deliver</>) : (<>Send via Gmail <Send className="h-4 w-4" /></>)}
+              {status === "sending" ? (
+                <><Loader2 className="h-4 w-4 animate-spin" /> Sending...</>
+              ) : status === "sent" ? (
+                <><Check className="h-4 w-4" /> Enquiry Sent</>
+              ) : (
+                <>Send Enquiry <Send className="h-4 w-4" /></>
+              )}
             </button>
           </form>
         </div>

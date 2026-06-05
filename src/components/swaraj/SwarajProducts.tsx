@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Star, Flame, TrendingUp, Send, Check, Gauge, Cog, Fuel } from "lucide-react";
 import swarajImg from "@/assets/swaraj-tractor.jpg";
 import { EMAIL, gmailComposeUrl } from "@/lib/contact";
+import { sendEnquiryEmail } from "@/lib/api/email.functions";
+import { toast } from "sonner";
 
 type Model = {
   name: string;
@@ -42,7 +44,13 @@ const filters = [
 
 export function SwarajProducts() {
   const [filter, setFilter] = useState<string>("all");
+  const [selectedModel, setSelectedModel] = useState<string>("Any model");
   const filtered = useMemo(() => filter === "all" ? models : models.filter(m => m.range === filter), [filter]);
+
+  const handleQuickEnquire = (modelName: string) => {
+    setSelectedModel(modelName);
+    document.getElementById("callback")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
@@ -115,28 +123,22 @@ export function SwarajProducts() {
       {/* Models grid */}
       <section className="py-12 md:py-16">
         <div className="container-page grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((m) => <ModelCard key={m.name} model={m} />)}
+          {filtered.map((m) => <ModelCard key={m.name} model={m} onEnquire={() => handleQuickEnquire(m.name)} />)}
         </div>
       </section>
 
-      <CallbackForm models={models} />
+      <CallbackForm models={models} selectedModel={selectedModel} onModelChange={setSelectedModel} />
     </>
   );
 }
 
-function ModelCard({ model }: { model: Model }) {
+function ModelCard({ model, onEnquire }: { model: Model; onEnquire: () => void }) {
   const tagMap = {
     best: { label: "Best Seller", icon: Flame, color: "var(--swaraj)" },
     top: { label: "Top Pick", icon: Star, color: "#C97A0A" },
     popular: { label: "Popular", icon: TrendingUp, color: "#1E6B3F" },
   };
   const tag = model.tag ? tagMap[model.tag] : null;
-
-  const enquireUrl = gmailComposeUrl({
-    to: EMAIL,
-    subject: `Enquiry for ${model.name}`,
-    body: `Hi Cropmak,\n\nI'd like more info on the ${model.name} (${model.hp} HP).\n\nName:\nPhone:\nLocation:\n\nThanks.`,
-  });
 
   return (
     <div className="group relative bg-card border-2 border-border rounded-2xl p-6 hover:border-swaraj/40 hover:-translate-y-1 hover:shadow-elevated transition-all">
@@ -164,14 +166,12 @@ function ModelCard({ model }: { model: Model }) {
         <Spec icon={Cog} label="Gears" value={model.gears} />
       </div>
 
-      <a
-        href={enquireUrl}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        onClick={onEnquire}
         className="block w-full text-center bg-foreground text-background hover:bg-swaraj py-2.5 rounded-full text-sm font-semibold transition-colors"
       >
-        Enquire via Gmail
-      </a>
+        Quick Enquire
+      </button>
     </div>
   );
 }
@@ -187,20 +187,32 @@ function Spec({ icon: Icon, label, value }: { icon: typeof Cog; label: string; v
   );
 }
 
-function CallbackForm({ models }: { models: Model[] }) {
-  const [form, setForm] = useState({ name: "", phone: "", model: "Any model" });
-  const [sent, setSent] = useState(false);
+function CallbackForm({ models, selectedModel, onModelChange }: { models: Model[]; selectedModel: string; onModelChange: (model: string) => void }) {
+  const [form, setForm] = useState({ name: "", phone: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const body = `Name: ${form.name}\nPhone: ${form.phone}\nModel: ${form.model}\n\nPlease call me back.`;
-    window.open(
-      gmailComposeUrl({ subject: `Swaraj Callback Request — ${form.model}`, body }),
-      "_blank",
-      "noopener,noreferrer",
-    );
-    setSent(true);
-    setTimeout(() => setSent(false), 3500);
+    setStatus("sending");
+    try {
+      await sendEnquiryEmail({
+        data: {
+          name: form.name,
+          phone: form.phone,
+          interest: `Swaraj Callback Request — ${selectedModel}`,
+          message: "Please call me back.",
+        }
+      });
+      setStatus("sent");
+      toast.success("Our team will contact you shortly", { duration: 3000 });
+      setForm({ name: "", phone: "" });
+      onModelChange("Any model");
+      setTimeout(() => setStatus("idle"), 3500);
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      toast.error("Failed to send request. Please try again.");
+      setStatus("idle");
+    }
   };
 
   return (
@@ -211,17 +223,18 @@ function CallbackForm({ models }: { models: Model[] }) {
           <p className="mt-3 text-white/60">Pricing, demo bookings, finance & EMI — sorted in one call.</p>
         </div>
         <form onSubmit={onSubmit} className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 md:p-8 grid md:grid-cols-3 gap-4">
-          <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Your name *" className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-swaraj" />
-          <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="Phone *" className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-swaraj" />
-          <select value={form.model} onChange={e => setForm({ ...form, model: e.target.value })} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-swaraj">
+          <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Your name *" disabled={status === "sending"} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-swaraj disabled:opacity-50" />
+          <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="Phone *" disabled={status === "sending"} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-swaraj disabled:opacity-50" />
+          <select value={selectedModel} onChange={e => onModelChange(e.target.value)} disabled={status === "sending"} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-swaraj disabled:opacity-50">
             <option className="text-foreground">Any model</option>
             {models.map(m => <option key={m.name} className="text-foreground">{m.name}</option>)}
           </select>
           <button
             type="submit"
-            className="md:col-span-3 inline-flex items-center justify-center gap-2 bg-swaraj hover:opacity-90 text-white px-6 py-3.5 rounded-full font-semibold text-sm transition-opacity"
+            disabled={status === "sending" || status === "sent"}
+            className="md:col-span-3 inline-flex items-center justify-center gap-2 bg-swaraj hover:opacity-90 text-white px-6 py-3.5 rounded-full font-semibold text-sm transition-opacity disabled:opacity-70"
           >
-            {sent ? (<><Check className="h-4 w-4" /> Gmail opened — hit send to deliver</>) : (<>Send Request via Gmail <Send className="h-4 w-4" /></>)}
+            {status === "sending" ? "Sending..." : status === "sent" ? (<><Check className="h-4 w-4" /> Request Sent</>) : (<>Send Request <Send className="h-4 w-4" /></>)}
           </button>
         </form>
       </div>
