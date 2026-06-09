@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SwarajRouteImport } from './routes/swaraj'
+import { Route as FarmMachineryRouteImport } from './routes/farm-machinery'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SwarajRoute = SwarajRouteImport.update({
   id: '/swaraj',
   path: '/swaraj',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FarmMachineryRoute = FarmMachineryRouteImport.update({
+  id: '/farm-machinery',
+  path: '/farm-machinery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/farm-machinery': typeof FarmMachineryRoute
   '/swaraj': typeof SwarajRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/farm-machinery': typeof FarmMachineryRoute
   '/swaraj': typeof SwarajRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/farm-machinery': typeof FarmMachineryRoute
   '/swaraj': typeof SwarajRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/swaraj'
+  fullPaths: '/' | '/farm-machinery' | '/swaraj'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/swaraj'
-  id: '__root__' | '/' | '/swaraj'
+  to: '/' | '/farm-machinery' | '/swaraj'
+  id: '__root__' | '/' | '/farm-machinery' | '/swaraj'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FarmMachineryRoute: typeof FarmMachineryRoute
   SwarajRoute: typeof SwarajRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/swaraj'
       fullPath: '/swaraj'
       preLoaderRoute: typeof SwarajRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/farm-machinery': {
+      id: '/farm-machinery'
+      path: '/farm-machinery'
+      fullPath: '/farm-machinery'
+      preLoaderRoute: typeof FarmMachineryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FarmMachineryRoute: FarmMachineryRoute,
   SwarajRoute: SwarajRoute,
 }
 export const routeTree = rootRouteImport

@@ -30,7 +30,7 @@ export function HeroBanner() {
         </h1>
 
         <p className="mt-6 text-base md:text-lg text-white/85 max-w-xl leading-relaxed">
-          Tractors, implements, irrigation and farm finance — every solution your land deserves, from one trusted partner.
+          Tractors and farm machinery — every solution your land deserves, from one trusted partner.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
