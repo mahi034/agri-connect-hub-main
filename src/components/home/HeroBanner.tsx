@@ -17,8 +17,8 @@ export function HeroBanner() {
       </video>
 
       {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#071C0E]/75 via-[#071C0E]/30 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#071C0E]/40 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#071C0E]/60 via-[#071C0E]/15 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#071C0E]/25 via-transparent to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-background to-transparent" />
 
       <div className="container-page relative z-10 py-20 md:py-28">
