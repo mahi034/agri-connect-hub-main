@@ -51,7 +51,7 @@ export function EnquirySection() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <Field label="Full Name *" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="Your name" disabled={status === "sending"} />
-              <Field label="Phone *" required type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} placeholder="+91 ..." disabled={status === "sending"} />
+              <PhoneField label="Phone *" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} disabled={status === "sending"} />
               <div className="md:col-span-2 flex flex-col gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Interest</label>
                 <select
@@ -61,9 +61,7 @@ export function EnquirySection() {
                   className="bg-background border border-border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:opacity-50"
                 >
                   <option>Swaraj Tractors</option>
-                  <option>Implements</option>
-                  <option>Irrigation</option>
-                  <option>Farm Finance</option>
+                  <option>Farm Machinery</option>
                 </select>
               </div>
             </div>
@@ -129,6 +127,28 @@ function Field({ label, value, onChange, ...props }: { label: string; value: str
         onChange={(e) => onChange(e.target.value)}
         className="bg-background border border-border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
       />
+    </div>
+  );
+}
+
+function PhoneField({ label, value, onChange, disabled }: { label: string; value: string; onChange: (v: string) => void; disabled?: boolean }) {
+  const invalid = value.length > 0 && value.length < 10;
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</label>
+      <input
+        required
+        type="tel"
+        inputMode="numeric"
+        value={value}
+        maxLength={10}
+        pattern="[0-9]{10}"
+        placeholder="10-digit mobile number"
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.value.replace(/\D/g, "").slice(0, 10))}
+        className={`bg-background border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:ring-2 disabled:opacity-50 ${invalid ? "border-red-400 focus:border-red-400 focus:ring-red-400/15" : "border-border focus:border-primary focus:ring-primary/15"}`}
+      />
+      {invalid && <p className="text-xs text-red-500">Enter a valid 10-digit mobile number</p>}
     </div>
   );
 }

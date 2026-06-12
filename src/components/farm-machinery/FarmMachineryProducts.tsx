@@ -637,7 +637,19 @@ function CallbackForm({
         </div>
         <form onSubmit={onSubmit} className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 md:p-8 grid md:grid-cols-3 gap-4">
           <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Your name *" disabled={status === "sending"} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-[#4ade80] disabled:opacity-50" />
-          <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="Phone *" disabled={status === "sending"} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-[#4ade80] disabled:opacity-50" />
+          <input
+            required
+            type="tel"
+            inputMode="numeric"
+            value={form.phone}
+            maxLength={10}
+            pattern="[0-9]{10}"
+            placeholder="10-digit mobile number *"
+            disabled={status === "sending"}
+            onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })}
+            title="Enter a valid 10-digit mobile number"
+            className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-[#4ade80] disabled:opacity-50"
+          />
           <select value={selectedItem} onChange={e => onItemChange(e.target.value)} disabled={status === "sending"} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#4ade80] disabled:opacity-50">
             <option className="text-foreground">Any item</option>
             {items.map(m => <option key={m.name} className="text-foreground">{m.name}</option>)}

@@ -1,5 +1,5 @@
 import { ArrowRight, PlayCircle } from "lucide-react";
-import heroImg from "@/assets/hero-tractor.jpg";
+import heroImg from "@/assets/swaraj-tractor.jpg";
 
 export function HeroBanner() {
   return (
@@ -7,10 +7,10 @@ export function HeroBanner() {
       {/* Background image */}
       <img
         src={heroImg}
-        alt="Tractor in green farmland at golden hour"
+        alt="Swaraj tractor in green farmland"
         width={1920}
         height={1080}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover object-top"
       />
       {/* Gradient overlays for readability */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#071C0E]/95 via-[#071C0E]/70 to-transparent" />
@@ -20,7 +20,7 @@ export function HeroBanner() {
       <div className="container-page relative z-10 py-20 md:py-28">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur text-xs font-medium mb-6">
           <span className="h-2 w-2 rounded-full bg-[#6EE7A0] animate-pulse" />
-          Authorized Multi-Brand Agri Dealer
+          Authorized Swaraj Dealer — Andhra Pradesh
         </div>
 
         <h1 className="font-display font-extrabold text-[clamp(2.5rem,5.5vw,4.75rem)] leading-[1.04] tracking-tight">
@@ -50,8 +50,8 @@ export function HeroBanner() {
 
         <div className="mt-12 grid grid-cols-3 gap-6 max-w-lg">
           {[
-            { n: "13+", l: "Tractor Models" },
-            { n: "50yr", l: "Brand Legacy" },
+            { n: "26+", l: "Tractor Models" },
+            { n: "50 yr", l: "Brand Legacy" },
             { n: "10k+", l: "Happy Farmers" },
           ].map((s) => (
             <div key={s.l}>

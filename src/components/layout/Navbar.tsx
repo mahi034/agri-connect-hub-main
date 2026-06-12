@@ -1,12 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Phone, Mail, Menu, X, ArrowRight, Sprout } from "lucide-react";
+import { Phone, Mail, Menu, X, ArrowRight } from "lucide-react";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL, gmailComposeUrl } from "@/lib/contact";
+import logoImg from "@/assets/cropmak-logo.png";
 
 const navItems = [
   { label: "Home", to: "/" },
   { label: "Tractors", to: "/swaraj" },
-  { label: "Brands", to: "/#brands" },
+  { label: "Farm Machinery", to: "/farm-machinery" },
+  { label: "About Us", to: "/#about" },
   { label: "Why Us", to: "/#why" },
   { label: "Contact", to: "/#enquiry" },
 ];
@@ -35,11 +37,9 @@ export function Navbar() {
 
       {/* Main nav */}
       <div className="bg-white/95 backdrop-blur-md border-b border-border/70">
-        <div className="container-page flex items-center justify-between h-[72px]">
+        <div className="container-page flex items-center justify-between h-[80px]">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary-mid flex items-center justify-center shadow-soft">
-              <Sprout className="h-5 w-5 text-white" />
-            </div>
+            <img src={logoImg} alt="Cropmak Logo" className="h-10 w-10 rounded-full object-contain" />
             <div className="leading-tight">
               <div className="font-display font-extrabold text-lg tracking-tight text-primary">CROPMAK</div>
               <div className="text-[10px] uppercase tracking-[0.18em] text-amber-brand font-semibold">Roots of Innovations</div>
