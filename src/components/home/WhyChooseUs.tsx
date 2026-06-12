@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShieldCheck, Wrench, Award, Sprout, Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShieldCheck, Wrench, Award, Sprout, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import img735FE from "@/assets/swaraj-735fe.png";
 import img963FE from "@/assets/swaraj-963fe.png";
 import img8200 from "@/assets/swaraj-8200.png";
@@ -95,11 +95,6 @@ function TestimonialCarousel() {
               <img src={t.image} alt={t.product} loading="lazy" className="w-full h-full object-contain p-4" />
             </div>
             <div className="p-5 flex flex-col flex-1">
-              <div className="flex items-center gap-1 mb-3">
-                {[...Array(5)].map((_, s) => (
-                  <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
               <Quote className="h-5 w-5 text-primary/30 mb-2 shrink-0" />
               <p className="text-sm text-foreground/80 leading-relaxed flex-1">"{t.quote}"</p>
               <div className="mt-4 flex items-center justify-between gap-2">

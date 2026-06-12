@@ -5,7 +5,6 @@ import { sendEnquiryEmail } from "@/lib/api/email.functions";
 import { toast } from "sonner";
 
 import swarajHeroImg from "@/assets/swaraj-963fe.png";
-import img717 from "@/assets/swaraj-717.png";
 import imgTarget630 from "@/assets/swaraj-target-630-4wd.png";
 import imgTarget625_4WD from "@/assets/swaraj-target-625-4wd.png";
 import imgTarget625_2WD from "@/assets/swaraj-target-625-2wd.png";
@@ -34,7 +33,7 @@ type TractorModel = {
   name: string;
   hp: number;
   hpLabel: string;
-  range: "15" | "20-30" | "31-40" | "41-45" | "46-50" | "61-70" | "code";
+  range: "20-30" | "31-40" | "41-45" | "46-50" | "61-70";
   cc: number;
   cylinders?: number;
   rpm?: number;
@@ -54,18 +53,6 @@ type TractorModel = {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const tractors: TractorModel[] = [
-  // ── 15 HP ──
-  {
-    name: "Swaraj 717",
-    hp: 15, hpLabel: "15 HP", range: "15",
-    cc: 2300, cylinders: 1, rpm: 2300,
-    lift: "780 kg", gears: "6F + 3R",
-    weight: "850 kg", groundClearance: "260 mm",
-    brakes: "Dry disc",
-    features: ["Large-bore single cylinder block", "540 r/min PTO", "Compact & lightweight design"],
-    image: img717,
-  },
-
   // ── 20–30 HP ──
   {
     name: "Swaraj Target 630 4WD",
@@ -307,25 +294,15 @@ const tractors: TractorModel[] = [
   },
 
   // ── CODE ──
-  {
-    name: "CODE by Swaraj",
-    hp: 11, hpLabel: "11.1 HP", range: "code",
-    cc: 0,
-    gears: "6F + 3R", groundClearance: "266 mm",
-    features: ["Bi-directional seat (180° rotation)", "Petrol / Diesel options", "Ultra-light minimal footprint", "Direct PTO for spray boom attachment"],
-    note: "Flexible track width for inter-row crop spacing",
-  },
 ];
 
 const filters = [
   { key: "all", label: "All Models" },
-  { key: "15", label: "15 HP" },
   { key: "20-30", label: "20–30 HP" },
   { key: "31-40", label: "31–40 HP" },
   { key: "41-45", label: "41–45 HP" },
   { key: "46-50", label: "46–50 HP" },
   { key: "61-70", label: "61–70 HP" },
-  { key: "code", label: "CODE" },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────

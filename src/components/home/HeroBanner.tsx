@@ -1,4 +1,3 @@
-import { ArrowRight, PlayCircle } from "lucide-react";
 import heroImg from "@/assets/swaraj-tractor.jpg";
 
 export function HeroBanner() {
@@ -33,20 +32,6 @@ export function HeroBanner() {
           Tractors and farm machinery — every solution your land deserves, from one trusted partner.
         </p>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            href="/swaraj"
-            className="inline-flex items-center gap-2 bg-white text-primary px-6 py-3.5 rounded-full font-semibold text-sm hover:bg-[#A7F3C4] transition-colors shadow-elevated"
-          >
-            Explore Tractors <ArrowRight className="h-4 w-4" />
-          </a>
-          <a
-            href="#enquiry"
-            className="inline-flex items-center gap-2 border border-white/30 text-white px-6 py-3.5 rounded-full font-semibold text-sm hover:bg-white/10 transition-colors backdrop-blur"
-          >
-            <PlayCircle className="h-4 w-4" /> Book a Test Drive
-          </a>
-        </div>
 
         <div className="mt-12 grid grid-cols-3 gap-6 max-w-lg">
           {[
