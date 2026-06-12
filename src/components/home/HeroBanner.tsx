@@ -1,19 +1,24 @@
+import heroVideo from "@/assets/hero-agri.mp4";
 import heroImg from "@/assets/swaraj-tractor.jpg";
 
 export function HeroBanner() {
   return (
     <section className="relative overflow-hidden text-white min-h-[640px] md:min-h-[720px] flex items-center">
-      {/* Background image */}
-      <img
-        src={heroImg}
-        alt="Swaraj tractor in green farmland"
-        width={1920}
-        height={1080}
-        className="absolute inset-0 w-full h-full object-cover object-top"
-      />
-      {/* Gradient overlays for readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#071C0E]/95 via-[#071C0E]/70 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#071C0E]/80 via-transparent to-transparent" />
+      {/* Background video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        poster={heroImg}
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
+
+      {/* Gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#071C0E]/75 via-[#071C0E]/30 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#071C0E]/40 via-transparent to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-background to-transparent" />
 
       <div className="container-page relative z-10 py-20 md:py-28">
@@ -31,7 +36,6 @@ export function HeroBanner() {
         <p className="mt-6 text-base md:text-lg text-white/85 max-w-xl leading-relaxed">
           Tractors and farm machinery — every solution your land deserves, from one trusted partner.
         </p>
-
 
         <div className="mt-12 grid grid-cols-3 gap-6 max-w-lg">
           {[
