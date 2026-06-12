@@ -36,7 +36,7 @@ const highlights = [
 
 export function AboutUs() {
   return (
-    <section id="about" className="py-20 md:py-28">
+    <section id="about" className="py-8 md:py-10">
       <div className="container-page">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-14">

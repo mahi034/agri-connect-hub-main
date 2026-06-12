@@ -38,7 +38,7 @@ export function EnquirySection() {
   };
 
   return (
-    <section id="enquiry" className="py-20 md:py-28">
+    <section id="enquiry" className="py-8 md:py-10">
       <div className="container-page grid lg:grid-cols-5 gap-10">
         <div className="lg:col-span-2">
           <div className="text-xs uppercase tracking-[0.2em] text-amber-brand font-semibold mb-3">Get in Touch</div>
@@ -51,7 +51,7 @@ export function EnquirySection() {
 
           <div className="space-y-3">
             <ContactRow icon={Phone} label="Call us" value={PHONE_DISPLAY} href={`tel:${PHONE_TEL}`} />
-            <ContactRow icon={Mail} label="Email (opens Gmail)" value={EMAIL} href={gmailComposeUrl()} external />
+            <ContactRow icon={Mail} label="Email" value={EMAIL} href={gmailComposeUrl()} external />
             <ContactRow icon={MapPin} label="Visit" value="Cropmak Hub, India" href="#" />
           </div>
         </div>

@@ -147,7 +147,7 @@ function TestimonialCarousel() {
 
 export function WhyChooseUs() {
   return (
-    <section id="why" className="py-20 md:py-28 bg-primary-soft/40">
+    <section id="why" className="py-8 md:py-10 bg-primary-soft/40">
       <div className="container-page">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-14">

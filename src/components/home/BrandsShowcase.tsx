@@ -44,7 +44,7 @@ const sections = [
 
 export function BrandsShowcase() {
   return (
-    <section id="products" className="py-20 md:py-28">
+    <section id="products" className="py-8 md:py-10">
       <div className="container-page">
         <div className="text-center max-w-2xl mx-auto mb-14">
           <div className="text-xs uppercase tracking-[0.2em] text-amber-brand font-semibold mb-3">Our Products</div>
