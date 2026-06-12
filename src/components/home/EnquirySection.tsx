@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Send, Phone, Mail, MapPin, Check, Loader2 } from "lucide-react";
+import { Send, Phone, Mail, MapPin, Check, Loader2, AlertCircle } from "lucide-react";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL, gmailComposeUrl } from "@/lib/contact";
 import { sendEnquiryEmail } from "@/lib/api/email.functions";
 import { toast } from "sonner";
@@ -7,9 +7,20 @@ import { toast } from "sonner";
 export function EnquirySection() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [form, setForm] = useState({ name: "", phone: "", interest: "Swaraj Tractors", message: "" });
+  const [touched, setTouched] = useState({ name: false, phone: false });
+
+  const nameError = touched.name && !form.name.trim() ? "Full name is required" : null;
+  const phoneError = touched.phone && (
+    form.phone.length === 0 ? "Phone number is required" :
+    form.phone.length < 10 ? "Enter a valid 10-digit mobile number" : null
+  );
+
+  const touch = (field: keyof typeof touched) => setTouched(t => ({ ...t, [field]: true }));
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ name: true, phone: true });
+    if (!form.name.trim() || form.phone.length < 10) return;
     setStatus("sending");
 
     try {
@@ -17,6 +28,7 @@ export function EnquirySection() {
       setStatus("sent");
       toast.success("Our team will contact you shortly", { duration: 3000 });
       setForm({ name: "", phone: "", interest: "Swaraj Tractors", message: "" });
+      setTouched({ name: false, phone: false });
       setTimeout(() => setStatus("idle"), 3500);
     } catch (error) {
       console.error("Failed to send email:", error);
@@ -50,8 +62,8 @@ export function EnquirySection() {
             <p className="text-sm text-muted-foreground mb-6">We will get back to you as soon as possible.</p>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <Field label="Full Name *" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="Your name" disabled={status === "sending"} />
-              <PhoneField label="Phone *" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} disabled={status === "sending"} />
+              <Field label="Full Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} onBlur={() => touch("name")} error={nameError} placeholder="Your name" disabled={status === "sending"} />
+              <PhoneField label="Phone" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} onBlur={() => touch("phone")} error={phoneError || null} disabled={status === "sending"} />
               <div className="md:col-span-2 flex flex-col gap-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Interest</label>
                 <select
@@ -117,38 +129,59 @@ function ContactRow({ icon: Icon, label, value, href, external }: { icon: typeof
   );
 }
 
-function Field({ label, value, onChange, ...props }: { label: string; value: string; onChange: (v: string) => void } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value">) {
+function FieldError({ message }: { message: string }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</label>
-      <input
-        {...props}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="bg-background border border-border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
-      />
+    <div className="flex items-center gap-1.5 mt-1 text-red-500">
+      <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+      <span className="text-xs font-medium">{message}</span>
     </div>
   );
 }
 
-function PhoneField({ label, value, onChange, disabled }: { label: string; value: string; onChange: (v: string) => void; disabled?: boolean }) {
-  const invalid = value.length > 0 && value.length < 10;
+function Field({ label, value, onChange, error, onBlur, ...props }: { label: string; value: string; onChange: (v: string) => void; error?: string | null; onBlur?: () => void } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "onBlur">) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</label>
+      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {label} <span className="text-red-400">*</span>
+      </label>
       <input
-        required
+        {...props}
+        value={value}
+        onBlur={onBlur}
+        onChange={(e) => onChange(e.target.value)}
+        className={`bg-background border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:ring-2 disabled:opacity-50 transition-colors ${
+          error
+            ? "border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/15"
+            : "border-border focus:border-primary focus:ring-primary/15"
+        }`}
+      />
+      {error && <FieldError message={error} />}
+    </div>
+  );
+}
+
+function PhoneField({ label, value, onChange, onBlur, error, disabled }: { label: string; value: string; onChange: (v: string) => void; onBlur?: () => void; error: string | null; disabled?: boolean }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {label} <span className="text-red-400">*</span>
+      </label>
+      <input
         type="tel"
         inputMode="numeric"
         value={value}
         maxLength={10}
-        pattern="[0-9]{10}"
         placeholder="10-digit mobile number"
         disabled={disabled}
+        onBlur={onBlur}
         onChange={(e) => onChange(e.target.value.replace(/\D/g, "").slice(0, 10))}
-        className={`bg-background border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:ring-2 disabled:opacity-50 ${invalid ? "border-red-400 focus:border-red-400 focus:ring-red-400/15" : "border-border focus:border-primary focus:ring-primary/15"}`}
+        className={`bg-background border rounded-lg px-3.5 py-3 text-sm focus:outline-none focus:ring-2 disabled:opacity-50 transition-colors ${
+          error
+            ? "border-red-400 bg-red-50/40 focus:border-red-400 focus:ring-red-400/15"
+            : "border-border focus:border-primary focus:ring-primary/15"
+        }`}
       />
-      {invalid && <p className="text-xs text-red-500">Enter a valid 10-digit mobile number</p>}
+      {error && <FieldError message={error} />}
     </div>
   );
 }

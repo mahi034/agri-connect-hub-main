@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ChevronRight, Wrench, Send, Check } from "lucide-react";
+import { ArrowLeft, ChevronRight, Wrench, Send, Check, AlertCircle } from "lucide-react";
 import { sendEnquiryEmail } from "@/lib/api/email.functions";
 import { toast } from "sonner";
 
@@ -602,10 +602,33 @@ function CallbackForm({
   onItemChange: (v: string) => void;
 }) {
   const [form, setForm] = useState({ name: "", phone: "" });
+  const [touched, setTouched] = useState({ name: false, phone: false });
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [shake, setShake] = useState(false);
+
+  const nameError = touched.name && !form.name.trim() ? "Please enter your full name" : null;
+  const phoneError = touched.phone
+    ? form.phone.length === 0
+      ? "Phone number is required"
+      : form.phone.length < 10
+      ? "Must be a 10-digit mobile number"
+      : null
+    : null;
+
+  const touch = (f: keyof typeof touched) => setTouched(t => ({ ...t, [f]: true }));
+
+  const triggerShake = () => {
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ name: true, phone: true });
+    if (!form.name.trim() || form.phone.length < 10) {
+      triggerShake();
+      return;
+    }
     setStatus("sending");
     try {
       await sendEnquiryEmail({
@@ -619,6 +642,7 @@ function CallbackForm({
       setStatus("sent");
       toast.success("Our team will contact you shortly", { duration: 3000 });
       setForm({ name: "", phone: "" });
+      setTouched({ name: false, phone: false });
       onItemChange("Any item");
       setTimeout(() => setStatus("idle"), 3500);
     } catch (error) {
@@ -635,26 +659,76 @@ function CallbackForm({
           <h2 className="text-3xl md:text-4xl font-display font-bold">Request a callback</h2>
           <p className="mt-3 text-white/60">Pricing, availability, and demo bookings — sorted in one call.</p>
         </div>
-        <form onSubmit={onSubmit} className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 md:p-8 grid md:grid-cols-3 gap-4">
-          <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Your name *" disabled={status === "sending"} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-[#4ade80] disabled:opacity-50" />
-          <input
-            required
-            type="tel"
-            inputMode="numeric"
-            value={form.phone}
-            maxLength={10}
-            pattern="[0-9]{10}"
-            placeholder="10-digit mobile number *"
-            disabled={status === "sending"}
-            onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })}
-            title="Enter a valid 10-digit mobile number"
-            className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm placeholder:text-white/40 focus:outline-none focus:border-[#4ade80] disabled:opacity-50"
-          />
-          <select value={selectedItem} onChange={e => onItemChange(e.target.value)} disabled={status === "sending"} className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#4ade80] disabled:opacity-50">
-            <option className="text-foreground">Any item</option>
-            {items.map(m => <option key={m.name} className="text-foreground">{m.name}</option>)}
-          </select>
-          <button type="submit" disabled={status === "sending" || status === "sent"} className="md:col-span-3 inline-flex items-center justify-center gap-2 bg-[#1E6B3F] hover:opacity-90 text-white px-6 py-3.5 rounded-full font-semibold text-sm transition-opacity disabled:opacity-70">
+        <form
+          onSubmit={onSubmit}
+          noValidate
+          className={`bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 md:p-8 grid md:grid-cols-3 gap-x-4 gap-y-5 ${shake ? "animate-[shake_0.45s_ease-in-out]" : ""}`}
+        >
+          {/* Name field */}
+          <div className="flex flex-col gap-1.5">
+            <input
+              value={form.name}
+              onChange={e => setForm({ ...form, name: e.target.value })}
+              onBlur={() => touch("name")}
+              placeholder="Your name"
+              disabled={status === "sending"}
+              className={`border rounded-lg px-4 py-3 text-sm placeholder:text-white/35 focus:outline-none focus:ring-2 disabled:opacity-50 transition-all duration-200 ${
+                nameError
+                  ? "bg-red-500/10 border-red-400/70 focus:border-red-400 focus:ring-red-400/20 text-white"
+                  : "bg-white/5 border-white/15 focus:border-[#4ade80] focus:ring-[#4ade80]/20"
+              }`}
+            />
+            {nameError && (
+              <div className="flex items-center gap-1.5 text-red-400">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                <span className="text-xs font-medium">{nameError}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Phone field */}
+          <div className="flex flex-col gap-1.5">
+            <input
+              type="tel"
+              inputMode="numeric"
+              value={form.phone}
+              maxLength={10}
+              placeholder="10-digit mobile number"
+              disabled={status === "sending"}
+              onBlur={() => touch("phone")}
+              onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })}
+              className={`border rounded-lg px-4 py-3 text-sm placeholder:text-white/35 focus:outline-none focus:ring-2 disabled:opacity-50 transition-all duration-200 ${
+                phoneError
+                  ? "bg-red-500/10 border-red-400/70 focus:border-red-400 focus:ring-red-400/20 text-white"
+                  : "bg-white/5 border-white/15 focus:border-[#4ade80] focus:ring-[#4ade80]/20"
+              }`}
+            />
+            {phoneError && (
+              <div className="flex items-center gap-1.5 text-red-400">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                <span className="text-xs font-medium">{phoneError}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Item select */}
+          <div className="flex flex-col gap-1.5">
+            <select
+              value={selectedItem}
+              onChange={e => onItemChange(e.target.value)}
+              disabled={status === "sending"}
+              className="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#4ade80] focus:ring-2 focus:ring-[#4ade80]/20 disabled:opacity-50 transition-all duration-200"
+            >
+              <option className="text-foreground">Any item</option>
+              {items.map(m => <option key={m.name} className="text-foreground">{m.name}</option>)}
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            disabled={status === "sending" || status === "sent"}
+            className="md:col-span-3 inline-flex items-center justify-center gap-2 bg-[#1E6B3F] hover:opacity-90 text-white px-6 py-3.5 rounded-full font-semibold text-sm transition-opacity disabled:opacity-70"
+          >
             {status === "sending" ? "Sending..." : status === "sent" ? <><Check className="h-4 w-4" /> Request Sent</> : <>Send Request <Send className="h-4 w-4" /></>}
           </button>
         </form>
