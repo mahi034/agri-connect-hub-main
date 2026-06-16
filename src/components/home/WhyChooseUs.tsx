@@ -75,21 +75,23 @@ function TestimonialCarousel() {
   return (
     <>
     <div className="relative flex items-center gap-3">
-      {/* Left arrow */}
+      {/* Left arrow — hidden on mobile, shown below the cards instead */}
       <button
         onClick={prev}
-        className="shrink-0 h-10 w-10 rounded-full border-2 border-border bg-card hover:border-primary hover:text-primary flex items-center justify-center transition-colors"
+        className="hidden sm:flex shrink-0 h-10 w-10 rounded-full border-2 border-border bg-card hover:border-primary hover:text-primary items-center justify-center transition-colors"
         aria-label="Previous"
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
 
-      {/* Cards */}
+      {/* Cards — 1 on mobile, 2 on medium, 3 on large */}
       <div className="flex-1 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {visible.map((t, i) => (
           <div
             key={`${t.name}-${index}-${i}`}
-            className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col"
+            className={`bg-card border border-border rounded-2xl overflow-hidden flex-col ${
+              i === 0 ? "flex" : i === 1 ? "hidden sm:flex" : "hidden lg:flex"
+            }`}
           >
             <div className="h-36 bg-muted/40">
               <img src={t.image} alt={t.product} loading="lazy" className="w-full h-full object-contain p-4" />
@@ -116,18 +118,27 @@ function TestimonialCarousel() {
         ))}
       </div>
 
-      {/* Right arrow */}
+      {/* Right arrow — hidden on mobile, shown below the cards instead */}
       <button
         onClick={next}
-        className="shrink-0 h-10 w-10 rounded-full border-2 border-border bg-card hover:border-primary hover:text-primary flex items-center justify-center transition-colors"
+        className="hidden sm:flex shrink-0 h-10 w-10 rounded-full border-2 border-border bg-card hover:border-primary hover:text-primary items-center justify-center transition-colors"
         aria-label="Next"
       >
         <ChevronRight className="h-5 w-5" />
       </button>
     </div>
 
-    {/* Dot indicators */}
-    <div className="flex items-center justify-center gap-2 mt-6">
+    {/* Controls: dots, flanked by arrows on mobile */}
+    <div className="flex items-center justify-center gap-3 mt-6">
+      <button
+        onClick={prev}
+        className="sm:hidden shrink-0 h-9 w-9 rounded-full border-2 border-border bg-card hover:border-primary hover:text-primary flex items-center justify-center transition-colors"
+        aria-label="Previous"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+
+      <div className="flex items-center justify-center gap-2">
       {testimonials.map((_, i) => (
         <button
           key={i}
@@ -140,6 +151,15 @@ function TestimonialCarousel() {
           aria-label={`Go to ${i + 1}`}
         />
       ))}
+      </div>
+
+      <button
+        onClick={next}
+        className="sm:hidden shrink-0 h-9 w-9 rounded-full border-2 border-border bg-card hover:border-primary hover:text-primary flex items-center justify-center transition-colors"
+        aria-label="Next"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
     </div>
     </>
   );

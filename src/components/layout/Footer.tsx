@@ -48,7 +48,13 @@ export function Footer() {
               </a>
             </li>
             <li className="flex gap-2.5">
-              <MapPin className="h-4 w-4 text-[#6EE7A0] mt-0.5 shrink-0" /> Cropmak Dealership Hub, India
+              <MapPin className="h-4 w-4 text-[#6EE7A0] mt-0.5 shrink-0" />
+              <address className="not-italic leading-relaxed">
+                Sy No 489/1, Khaderabad,<br />
+                Kothapalli Panchayat, Mydukur Road,<br />
+                Proddatur, YSR Dist,<br />
+                A.P – 516361
+              </address>
             </li>
           </ul>
         </div>

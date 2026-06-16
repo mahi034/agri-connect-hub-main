@@ -52,7 +52,12 @@ export function EnquirySection() {
           <div className="space-y-3">
             <ContactRow icon={Phone} label="Call us" value={PHONE_DISPLAY} href={`tel:${PHONE_TEL}`} />
             <ContactRow icon={Mail} label="Email" value={EMAIL} href={gmailComposeUrl()} external />
-            <ContactRow icon={MapPin} label="Visit" value="Cropmak Hub, India" href="#" />
+            <ContactRow
+              icon={MapPin}
+              label="Visit"
+              value="Sy No 489/1, Khaderabad, Kothapalli Panchayat, Mydukur Road, Proddatur, YSR Dist, A.P – 516361"
+              multiline
+            />
           </div>
         </div>
 
@@ -110,21 +115,32 @@ export function EnquirySection() {
   );
 }
 
-function ContactRow({ icon: Icon, label, value, href, external }: { icon: typeof Phone; label: string; value: string; href: string; external?: boolean }) {
-  return (
-    <a
-      href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
-      className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border hover:border-primary/40 hover:shadow-soft transition-all"
-    >
+function ContactRow({ icon: Icon, label, value, href, external, multiline }: { icon: typeof Phone; label: string; value: string; href?: string; external?: boolean; multiline?: boolean }) {
+  const className = `flex gap-4 p-4 rounded-xl bg-card border border-border transition-all ${multiline ? "items-start" : "items-center"} ${href ? "hover:border-primary/40 hover:shadow-soft" : ""}`;
+  const inner = (
+    <>
       <div className="h-11 w-11 rounded-xl bg-primary-soft text-primary flex items-center justify-center shrink-0">
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0">
         <div className="text-xs text-muted-foreground uppercase tracking-wider">{label}</div>
-        <div className="font-semibold text-foreground truncate">{value}</div>
+        <div className={`font-semibold text-foreground ${multiline ? "leading-snug" : "truncate"}`}>{value}</div>
       </div>
+    </>
+  );
+
+  if (!href) {
+    return <div className={className}>{inner}</div>;
+  }
+
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className={className}
+    >
+      {inner}
     </a>
   );
 }
