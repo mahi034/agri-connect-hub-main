@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import { Phone, Mail, Menu, X, ArrowRight } from "lucide-react";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL, gmailComposeUrl } from "@/lib/contact";
@@ -15,6 +15,8 @@ const navItems = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+  const showTestDrive = !pathname.startsWith("/farm-machinery");
 
   return (
     <header className="sticky top-0 z-50">
@@ -61,12 +63,15 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#enquiry"
-              className="hidden md:inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary-mid transition-colors shadow-soft"
-            >
-              Book a Test Drive <ArrowRight className="h-4 w-4" />
-            </a>
+            {showTestDrive && (
+              <Link
+                to="/"
+                hash="enquiry"
+                className="hidden md:inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary-mid transition-colors shadow-soft"
+              >
+                Book a Test Drive <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
             <button
               onClick={() => setOpen(!open)}
               className="lg:hidden p-2 rounded-md hover:bg-muted"
@@ -90,13 +95,16 @@ export function Navbar() {
                   {item.label}
                 </Link>
               ))}
-              <a
-                href="#enquiry"
-                onClick={() => setOpen(false)}
-                className="mt-3 inline-flex items-center justify-center gap-1.5 bg-primary text-primary-foreground px-4 py-3 rounded-full text-sm font-semibold"
-              >
-                Book a Test Drive <ArrowRight className="h-4 w-4" />
-              </a>
+              {showTestDrive && (
+                <Link
+                  to="/"
+                  hash="enquiry"
+                  onClick={() => setOpen(false)}
+                  className="mt-3 inline-flex items-center justify-center gap-1.5 bg-primary text-primary-foreground px-4 py-3 rounded-full text-sm font-semibold"
+                >
+                  Book a Test Drive <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
             </div>
           </div>
         )}
