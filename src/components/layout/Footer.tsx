@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL, gmailComposeUrl } from "@/lib/contact";
-import logoImg from "@/assets/cropmak-logo.png";
+import logoImg from "@/assets/cropmak-mark-ondark.png";
 
 export function Footer() {
   return (
@@ -10,10 +10,18 @@ export function Footer() {
         <div>
           <div className="mb-4">
             <div className="flex items-center gap-2.5">
-              <img src={logoImg} alt="Cropmak Logo" className="h-10 w-10 rounded-full object-contain" />
-              <div className="leading-tight">
-                <div className="font-display font-extrabold text-lg tracking-tight text-white">CROPMAK</div>
-                <div className="text-[10px] uppercase tracking-[0.18em] text-amber-brand font-semibold">Roots of Innovations</div>
+              <img
+                src={logoImg}
+                alt="Cropmak Logo"
+                className="h-12 w-12 object-contain shrink-0"
+              />
+              <div className="flex flex-col justify-center mt-1.5">
+                <span className="font-logo font-bold text-xl leading-none tracking-[0.18em] text-white">
+                  CROPMAK
+                </span>
+                <span className="mt-1.5 text-[9px] leading-none uppercase tracking-[0.235em] text-amber-brand font-semibold">
+                  Roots of Innovations
+                </span>
               </div>
             </div>
           </div>

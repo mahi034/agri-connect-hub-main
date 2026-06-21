@@ -40,6 +40,7 @@
 
   --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-logo: "Cinzel", "Plus Jakarta Sans", serif;
 
   --shadow-soft: 0 4px 20px -8px rgba(30, 107, 63, 0.18);
   --shadow-elevated: 0 20px 60px -20px rgba(7, 28, 14, 0.35);

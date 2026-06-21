@@ -2,7 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import { Phone, Mail, Menu, X, ArrowRight } from "lucide-react";
 import { EMAIL, PHONE_DISPLAY, PHONE_TEL, gmailComposeUrl } from "@/lib/contact";
-import logoImg from "@/assets/cropmak-logo.png";
+import logoImg from "@/assets/cropmak-mark-onlight.png";
 
 const navItems = [
   { label: "Home", to: "/" },
@@ -41,19 +41,27 @@ export function Navbar() {
       <div className="bg-white/95 backdrop-blur-md border-b border-border/70">
         <div className="container-page flex items-center justify-between h-[80px]">
           <Link to="/" className="flex items-center gap-2.5">
-            <img src={logoImg} alt="Cropmak Logo" className="h-10 w-10 rounded-full object-contain" />
-            <div className="leading-tight">
-              <div className="font-display font-extrabold text-lg tracking-tight text-primary">CROPMAK</div>
-              <div className="text-[10px] uppercase tracking-[0.18em] text-amber-brand font-semibold">Roots of Innovations</div>
+            <img
+              src={logoImg}
+              alt="Cropmak Logo"
+              className="h-12 w-12 object-contain shrink-0"
+            />
+            <div className="flex flex-col justify-center mt-1.5">
+              <span className="font-logo font-bold text-xl leading-none tracking-[0.18em] text-primary">
+                CROPMAK
+              </span>
+              <span className="mt-1.5 text-[9px] leading-none uppercase tracking-[0.235em] text-amber-brand font-semibold">
+                Roots of Innovations
+              </span>
             </div>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden min-[900px]:flex items-center gap-0.5">
             {navItems.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
-                className="px-4 py-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors rounded-md"
+                className="px-3 py-2 text-[13px] xl:text-sm font-medium text-foreground/80 hover:text-primary transition-colors rounded-md whitespace-nowrap"
                 activeProps={{ className: "text-primary" }}
                 activeOptions={{ exact: item.to === "/" }}
               >
@@ -67,14 +75,14 @@ export function Navbar() {
               <Link
                 to="/"
                 hash="enquiry"
-                className="hidden md:inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary-mid transition-colors shadow-soft"
+                className="hidden lg:inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary-mid transition-colors shadow-soft whitespace-nowrap"
               >
                 Book a Test Drive <ArrowRight className="h-4 w-4" />
               </Link>
             )}
             <button
               onClick={() => setOpen(!open)}
-              className="lg:hidden p-2 rounded-md hover:bg-muted"
+              className="min-[900px]:hidden p-2 rounded-md hover:bg-muted"
               aria-label="Toggle menu"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -83,7 +91,7 @@ export function Navbar() {
         </div>
 
         {open && (
-          <div className="lg:hidden border-t border-border bg-white">
+          <div className="min-[900px]:hidden border-t border-border bg-white">
             <div className="container-page py-3 flex flex-col">
               {navItems.map((item) => (
                 <Link
