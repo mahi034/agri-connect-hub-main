@@ -409,7 +409,7 @@ export function SwarajProducts() {
       </section>
 
       {/* Filter bar */}
-      <section className="sticky top-[105px] z-30 bg-background/95 backdrop-blur border-b border-border">
+      <section className="sticky top-[116px] z-30 bg-background/95 backdrop-blur border-b border-border">
         <div className="container-page py-4 flex gap-2 overflow-x-auto">
           {filters.map(f => (
             <button
@@ -429,7 +429,7 @@ export function SwarajProducts() {
       </section>
 
       {/* Models grid */}
-      <section ref={contentRef} className="py-12 md:py-16 scroll-mt-[160px]">
+      <section ref={contentRef} className="py-12 md:py-16 scroll-mt-[190px]">
         <div className="container-page grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(t => (
             <TractorCard key={t.name} model={t} onEnquire={() => handleQuickEnquire(t.name)} />
@@ -468,32 +468,32 @@ function TractorCard({ model, onEnquire }: { model: TractorModel; onEnquire: () 
         </div>
       )}
 
-      {model.image ? (
-        <div className="aspect-[4/3] bg-muted overflow-hidden">
+      <div className="relative aspect-[2/1] overflow-hidden bg-muted">
+        {model.image ? (
           <img src={model.image} alt={model.name} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300" />
-        </div>
-      ) : (
-        <div className="aspect-[4/3] flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
-          <Tractor className="h-16 w-16 text-muted-foreground/30" />
-        </div>
-      )}
-
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-start justify-between mb-3">
-          <div>
-            <div className="text-xs uppercase tracking-wider text-muted-foreground">Swaraj</div>
-            <h3 className="font-display font-bold text-lg text-foreground mt-0.5 leading-tight">
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
+            <Tractor className="h-16 w-16 text-muted-foreground/30" />
+          </div>
+        )}
+        {/* Name + HP caption */}
+        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-3 pt-7 pb-2">
+          <div className="min-w-0">
+            <div className="text-[10px] uppercase tracking-wider text-white/70">Swaraj</div>
+            <h3 className="font-display font-bold text-base text-white leading-tight truncate">
               {model.name.replace("Swaraj ", "").replace("CODE by Swaraj", "CODE")}
             </h3>
           </div>
-          <div className="text-right shrink-0 ml-2">
-            <div className="text-xl font-display font-extrabold text-swaraj leading-none">{model.hpLabel}</div>
-            {model.cylinders && <div className="text-xs text-muted-foreground mt-0.5">{model.cylinders}-cyl</div>}
+          <div className="text-right shrink-0">
+            <div className="text-lg font-display font-extrabold text-white leading-none">{model.hpLabel}</div>
+            {model.cylinders && <div className="text-[10px] text-white/70 mt-0.5">{model.cylinders}-cyl</div>}
           </div>
         </div>
+      </div>
 
+      <div className="p-4 flex flex-col flex-1">
         {/* Main spec grid */}
-        <div className="grid grid-cols-2 gap-2 mb-3">
+        <div className="grid grid-cols-2 gap-1 mb-2">
           {specs.map(s => (
             <SpecBox key={s.label} icon={s.icon} label={s.label} value={s.value} />
           ))}
@@ -501,36 +501,36 @@ function TractorCard({ model, onEnquire }: { model: TractorModel; onEnquire: () 
 
         {/* Secondary specs */}
         {(model.pto || model.brakes || model.airCleaner || model.cooling || model.fuelTank || model.groundClearance || model.weight) && (
-          <div className="flex flex-wrap gap-1.5 mb-3">
+          <div className="flex flex-wrap gap-1 mb-2">
             {model.pto && (
-              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-1">PTO: {model.pto}</span>
+              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-0.5">PTO: {model.pto}</span>
             )}
             {model.brakes && (
-              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-1">Brakes: {model.brakes}</span>
+              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-0.5">Brakes: {model.brakes}</span>
             )}
             {model.airCleaner && (
-              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-1">Air: {model.airCleaner}</span>
+              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-0.5">Air: {model.airCleaner}</span>
             )}
             {model.cooling && (
-              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-1">{model.cooling}</span>
+              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-0.5">{model.cooling}</span>
             )}
             {model.fuelTank && (
-              <span className="inline-flex items-center gap-1 text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-1">
+              <span className="inline-flex items-center gap-1 text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-0.5">
                 <Fuel className="h-3 w-3" /> {model.fuelTank}
               </span>
             )}
             {model.groundClearance && (
-              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-1">Clr: {model.groundClearance}</span>
+              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-0.5">Clr: {model.groundClearance}</span>
             )}
             {model.weight && (
-              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-1">Wt: {model.weight}</span>
+              <span className="text-xs bg-muted/60 text-muted-foreground rounded-md px-2 py-0.5">Wt: {model.weight}</span>
             )}
           </div>
         )}
 
         {/* Features list */}
         {model.features && model.features.length > 0 && (
-          <ul className="mb-3 space-y-1">
+          <ul className="mb-2 space-y-0.5">
             {model.features.slice(0, 3).map(f => (
               <li key={f} className="flex items-start gap-1.5 text-xs text-muted-foreground">
                 <Check className="h-3 w-3 text-swaraj shrink-0 mt-0.5" /> {f}
@@ -556,11 +556,11 @@ function TractorCard({ model, onEnquire }: { model: TractorModel; onEnquire: () 
 
 function SpecBox({ icon: Icon, label, value }: { icon: typeof Cog; label: string; value: string }) {
   return (
-    <div className="bg-muted/60 rounded-lg p-2.5">
-      <div className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground">
-        <Icon className="h-3 w-3" /> {label}
-      </div>
-      <div className="font-semibold text-sm text-foreground mt-0.5">{value}</div>
+    <div className="flex items-center justify-between gap-1.5 bg-muted/60 rounded-lg px-2.5 py-1">
+      <span className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground truncate">
+        <Icon className="h-3 w-3 shrink-0" /> {label}
+      </span>
+      <span className="font-semibold text-xs text-foreground whitespace-nowrap">{value}</span>
     </div>
   );
 }
